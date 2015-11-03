@@ -1,0 +1,37 @@
+import 'babel-polyfill';
+import {expect} from 'chai';
+import sinon from 'sinon';
+import ObCache from '../ObCache.js';
+
+const wait = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
+
+describe('ObCache', () => {
+  var cache, cb;
+  beforeEach(() => {
+    cache = new ObCache();
+    cache.register('test', async ([data]) => {
+      return data;
+    });
+    cb = sinon.stub();
+  });
+
+  it('calls the register promiseFactory at the correct time', () => {
+    cache.register('x', async ([x]) => cb(x));
+    expect(cb.called).to.equal(false);
+    var item = cache.get('x', 'y', 'z');
+    item.listen({});
+    expect(cb.called).to.equal(false);
+    return wait(0).then(() => {
+      expect(cb.called).to.equal(true);
+      expect(cb.getCall(0).args[0]).to.equal('y');
+    });
+  });
+
+  it('it creates one copy of observables', () => {
+    expect(cache.get('test')).to.equal(cache.get('test'));
+  });
+
+  it('updates all observables on change', () => {
+   
+  });
+});
