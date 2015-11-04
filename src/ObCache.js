@@ -76,7 +76,7 @@ export default class ObCache {
 
       if (!observable._hasStartedOneRefresh) {
         observable.refresh();
-      } 
+      }
 
       // returns the unsubscribe function
       return listen.call(observable, handler);
@@ -101,6 +101,51 @@ export default class ObCache {
       });
     });
     return observable;
+  }
+
+  set(...args) {
+    var keys = args.slice(0, -1);
+    var value = args[args.length - 1];
+    var observable = this.get(...keys);
+    observable.set(value);
+    return observable;
+  }
+
+  update(...args){
+    var keys = args.slice(0, -1);
+    var updates = args[args.length - 1];
+    var observable = this.get(...keys);
+    var value = observable.get();
+
+    // shallow clone
+    if (Array.isArray(value)) {
+      value = value.slice();
+    }
+    else if (typeof value === 'object') {
+      value = Object.assign({}, value);
+    }
+
+    // apply a function or shallow merge
+    if (typeof changes === 'function') {
+      value = changes(value) || value;
+    }
+    else {
+      value = Object.assign(value, updates);
+    }
+    observable.set(value);
+  }
+
+  setAssuming(...args){
+    var keys = args.slice(0. -2);
+    var [value, promiseFactory] = args.slice(-2);
+    throw new Error('Not implemented');
+  }
+
+  updateAssuming(...args){
+    var keys = args.slice(0. -2);
+    var [value, promiseFactory] = args.slice(-2);
+
+    throw new Error('Not implemented');
   }
 
   _ensureRegister(handlerType){

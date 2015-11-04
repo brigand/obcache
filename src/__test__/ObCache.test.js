@@ -31,7 +31,19 @@ describe('ObCache', () => {
     expect(cache.get('test')).to.equal(cache.get('test'));
   });
 
-  it('updates all observables on change', () => {
-   
+  it('set works', () => {
+    cache.register('x', ([x]) => {
+      cb(x);
+    });
+    cache.set('test', 'a'); 
+    var obs = cache.get('test');
+    expect(obs.get()).to.equal('a');
+    expect(cb.called).to.equal(false);
+    obs.listen({});
+    expect(cb.called).to.equal(false);
+    return wait(1).then(() => {
+      expect(cb.called).to.equal(false);
+    })
   });
 });
+
