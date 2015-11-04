@@ -21,7 +21,7 @@ describe('ObCache', () => {
     var item = cache.get('x', 'y', 'z');
     item.listen({});
     expect(cb.called).to.equal(false);
-    return wait(0).then(() => {
+    return wait(10).then(() => {
       expect(cb.called).to.equal(true);
       expect(cb.getCall(0).args[0]).to.equal('y');
     });
