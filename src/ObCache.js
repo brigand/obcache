@@ -48,6 +48,7 @@ export default class ObCache {
             observable.set({status: 'OKAY', data: res});
           }, (err) => {
             observable._pendingRefresh = false;
+            console.error(err);
             observable.set({status: 'ERROR', data: err});
           });
       });
