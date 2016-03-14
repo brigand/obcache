@@ -1,5 +1,5 @@
 // a simple mutable observable implementation
-// just supports listeners, setting the value, and notifications 
+// just supports listeners, setting the value, and notifications
 // about listeners being added/removed
 export default class Observable {
   constructor(value){
@@ -33,6 +33,7 @@ export default class Observable {
       this._emitInternalChange();
     };
     this._emitInternalChange();
+    return unsubscribe;
   }
 
   listenForInternalState(fn){
@@ -41,6 +42,7 @@ export default class Observable {
     const unsubscribe = () => {
       this._internalListeners= this._internalListeners.filter((x) => x !== listener);
     };
+    return unsubscribe;
   }
 
   _emitChange(){
@@ -56,5 +58,3 @@ export default class Observable {
     }
   }
 }
-
-
